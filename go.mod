@@ -1,4 +1,4 @@
-module tnxstor
+module nixops
 
 go 1.26.7
 

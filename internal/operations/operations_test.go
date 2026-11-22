@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"tnxstor/internal/runner"
+	"nixops/internal/runner"
 )
 
 // fakeHMGenerations returns a listing relative to the current time so the

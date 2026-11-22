@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Fake nix for tnxstor integration tests.
-if [ -n "$TNXS_TEST_LOG" ]; then echo "nix $*" >> "$TNXS_TEST_LOG"; fi
+# Fake nix for nixops integration tests.
+if [ -n "$NIXOPS_TEST_LOG" ]; then echo "nix $*" >> "$NIXOPS_TEST_LOG"; fi
 case "$1" in
   --version) echo "nix (Nix) 2.19.2" ;;
   store) echo "Store URL: daemon" ;;

@@ -1,5 +1,5 @@
-BINARY := tnxs
-PKG := ./cmd/tnxs
+BINARY := nixops
+PKG := ./cmd/nixops
 
 # CGO_ENABLED=0 produces a fully static binary that runs on any Linux
 # host regardless of its C library (glibc/musl) — no interpreter or

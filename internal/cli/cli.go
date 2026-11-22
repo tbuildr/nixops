@@ -11,12 +11,12 @@ import (
 	"sort"
 	"strings"
 
-	"tnxstor/internal/devenv"
-	"tnxstor/internal/homemanager"
-	"tnxstor/internal/operations"
-	"tnxstor/internal/runner"
-	"tnxstor/internal/tui"
-	"tnxstor/internal/util"
+	"nixops/internal/devenv"
+	"nixops/internal/homemanager"
+	"nixops/internal/operations"
+	"nixops/internal/runner"
+	"nixops/internal/tui"
+	"nixops/internal/util"
 )
 
 // GlobalFlags are the options accepted by every subcommand.
@@ -29,15 +29,15 @@ type GlobalFlags struct {
 	Version bool
 }
 
-// Version is the tnxs release version.
+// Version is the nixops release version.
 const Version = "0.1.0"
 
 // Usage prints the top-level help.
 func Usage(s Stdio) {
-	fmt.Fprint(s.Out, `tnxs — Nix store maintenance for standalone Nix systems
+	fmt.Fprint(s.Out, `nixops — Nix store maintenance for standalone Nix systems
 
 Usage:
-  tnxs <command> [options]
+  nixops <command> [options]
 
 Commands:
   tui             Launch interactive interface
@@ -59,12 +59,12 @@ Commands:
 
 devenv environment selection (devenv-gc, devenv-update, devenv-info, clean):
   --dir, -C DIR   manage this devenv project directory
-  --env NAME      select an environment listed by 'tnxs devenv-envs'
+  --env NAME      select an environment listed by 'nixops devenv-envs'
   Without either, the project containing the current directory is used,
   or the sole environment under ~/Projects.
 
 devenv-envs options:
-  --projects-dir DIR  root to scan (default $TNXS_PROJECTS_DIR or ~/Projects)
+  --projects-dir DIR  root to scan (default $NIXOPS_PROJECTS_DIR or ~/Projects)
   --json              emit JSON
 
 Global options:
@@ -121,7 +121,7 @@ func Main(args []string, s Stdio) int {
 	}
 	if len(rest) == 0 {
 		if g.Version {
-			fmt.Fprintf(s.Out, "tnxs %s\n", Version)
+			fmt.Fprintf(s.Out, "nixops %s\n", Version)
 			return ExitSuccess
 		}
 		Usage(s)
@@ -129,7 +129,7 @@ func Main(args []string, s Stdio) int {
 	}
 	cmd = rest[0]
 	if g.Version {
-		fmt.Fprintf(s.Out, "tnxs %s\n", Version)
+		fmt.Fprintf(s.Out, "nixops %s\n", Version)
 		return ExitSuccess
 	}
 
@@ -180,7 +180,7 @@ func Main(args []string, s Stdio) int {
 	case "clean":
 		err = cmdClean(ctx, ex, g, sub, s)
 	default:
-		return failf(s, ExitUsage, "unknown command %q (see tnxs --help)", cmd).(*ExitError).Code
+		return failf(s, ExitUsage, "unknown command %q (see nixops --help)", cmd).(*ExitError).Code
 	}
 	if err == nil {
 		return ExitSuccess
@@ -193,21 +193,21 @@ func Main(args []string, s Stdio) int {
 		return ee.Code
 	}
 	if errors.Is(err, operations.ErrMissingDependency) {
-		fmt.Fprintln(s.Err, "tnxs:", err)
+		fmt.Fprintln(s.Err, "nixops:", err)
 		fmt.Fprintln(s.Err, "Operation cannot continue.")
 		return ExitDependency
 	}
 	if errors.Is(err, operations.ErrCancelled) {
-		fmt.Fprintln(s.Err, "tnxs: cancelled:", errors.Unwrap(err))
+		fmt.Fprintln(s.Err, "nixops: cancelled:", errors.Unwrap(err))
 		return ExitCancelled
 	}
-	fmt.Fprintln(s.Err, "tnxs: error:", err)
+	fmt.Fprintln(s.Err, "nixops: error:", err)
 	return ExitFailure
 }
 
 func runTUI(s Stdio) int {
 	if !Interactive() {
-		return failf(s, ExitUsage, "no interactive terminal available; use explicit subcommands or run tnxs inside a TTY").(*ExitError).Code
+		return failf(s, ExitUsage, "no interactive terminal available; use explicit subcommands or run nixops inside a TTY").(*ExitError).Code
 	}
 	if err := tui.Run(); err != nil {
 		return failf(s, ExitFailure, "TUI: %v", err).(*ExitError).Code
@@ -251,7 +251,7 @@ func cmdStatus(ctx context.Context, ex *operations.Executor, s Stdio) error {
 	if st.DaemonNote != "" {
 		daemon += " (" + st.DaemonNote + ")"
 	}
-	fmt.Fprintln(s.Out, "tnxstor status")
+	fmt.Fprintln(s.Out, "nixops status")
 	fmt.Fprintln(s.Out)
 	fmt.Fprintf(s.Out, "Host OS       %s\n", orDash(st.OS.OSPretty))
 	fmt.Fprintf(s.Out, "Nix version   %s\n", orDash(st.NixVersion))
@@ -423,7 +423,7 @@ func newDevenvTargetFlags(fs *flag.FlagSet) *devenvTargetFlags {
 	f := &devenvTargetFlags{}
 	fs.StringVar(&f.Dir, "dir", "", "devenv project directory")
 	fs.StringVar(&f.Dir, "C", "", "devenv project directory (shorthand)")
-	fs.StringVar(&f.Env, "env", "", "devenv environment name (see `tnxs devenv-envs`)")
+	fs.StringVar(&f.Env, "env", "", "devenv environment name (see `nixops devenv-envs`)")
 	return f
 }
 
@@ -505,7 +505,7 @@ func cmdDevenvEnvs(_ context.Context, args []string, s Stdio) error {
 	}
 	if len(envs) == 0 {
 		fmt.Fprintln(s.Out, "No devenv environments found.")
-		fmt.Fprintln(s.Out, "Create one with `devenv init` or set TNXS_PROJECTS_DIR.")
+		fmt.Fprintln(s.Out, "Create one with `devenv init` or set NIXOPS_PROJECTS_DIR.")
 		return nil
 	}
 	for _, e := range envs {
@@ -695,14 +695,14 @@ func printDryRun(s Stdio, p operations.Plan) {
 	fmt.Fprintln(s.Out, p.String())
 }
 
-// cleanFlags mirrors `tnxs clean` options. By default the plan is devenv GC,
+// cleanFlags mirrors `nixops clean` options. By default the plan is devenv GC,
 // Home Manager generations older than --hm-older-than, and normal GC.
 func cmdClean(ctx context.Context, ex *operations.Executor, g GlobalFlags, args []string, s Stdio) error {
 	fs := flag.NewFlagSet("clean", flag.ContinueOnError)
 	fs.SetOutput(s.Err)
 	hmOlder := fs.String("hm-older-than", "30d", "expire Home Manager generations older than this period")
 	devenvDir := fs.String("devenv-dir", "", "devenv project directory for the devenv step")
-	devenvEnv := fs.String("devenv-env", "", "devenv environment name for the devenv step (see `tnxs devenv-envs`)")
+	devenvEnv := fs.String("devenv-env", "", "devenv environment name for the devenv step (see `nixops devenv-envs`)")
 	devenvStep := fs.Bool("devenv", false, "include devenv GC")
 	homeManager := fs.Bool("home-manager", false, "include Home Manager generation expiry")
 	gc := fs.Bool("gc", false, "include Nix garbage collection")

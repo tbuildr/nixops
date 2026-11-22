@@ -10,9 +10,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"tnxstor/internal/devenv"
-	"tnxstor/internal/operations"
-	"tnxstor/internal/util"
+	"nixops/internal/devenv"
+	"nixops/internal/operations"
+	"nixops/internal/util"
 )
 
 // animTick drives harmonica spring updates at 60fps.

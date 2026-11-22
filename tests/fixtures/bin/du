@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Fake du for tnxstor integration tests.
-if [ -n "$TNXS_TEST_LOG" ]; then echo "du $*" >> "$TNXS_TEST_LOG"; fi
+# Fake du for nixops integration tests.
+if [ -n "$NIXOPS_TEST_LOG" ]; then echo "du $*" >> "$NIXOPS_TEST_LOG"; fi
 case "$1" in
   -sb) echo "17179869184	$2" ;;
   -sh) echo "16.0G	$2" ;;

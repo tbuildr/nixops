@@ -46,6 +46,6 @@ func isTTY(f *os.File) bool {
 func Interactive() bool { return isTTY(os.Stdin) && isTTY(os.Stdout) }
 
 func failf(s Stdio, code int, format string, args ...any) error {
-	fmt.Fprintf(s.Err, "tnxs: "+format+"\n", args...)
+	fmt.Fprintf(s.Err, "nixops: "+format+"\n", args...)
 	return &ExitError{Code: code}
 }

@@ -1,10 +1,10 @@
-// Command tnxs is the tnxstor CLI and TUI entry point.
+// Command nixops is the CLI and TUI entry point.
 package main
 
 import (
 	"os"
 
-	"tnxstor/internal/cli"
+	"nixops/internal/cli"
 )
 
 func main() {

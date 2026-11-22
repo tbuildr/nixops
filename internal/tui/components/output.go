@@ -1,4 +1,4 @@
-// Package components holds reusable TUI widgets for tnxstor.
+// Package components holds reusable TUI widgets for nixops.
 package components
 
 import (

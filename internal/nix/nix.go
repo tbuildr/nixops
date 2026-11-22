@@ -1,4 +1,4 @@
-// Package nix orchestrates the official nix-store / nix tools. tnxstor never
+// Package nix orchestrates the official nix-store / nix tools. nixops never
 // deletes anything from /nix/store itself; reachability and deletion decisions
 // are delegated to Nix's garbage collector.
 package nix
@@ -9,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"tnxstor/internal/runner"
-	"tnxstor/internal/util"
+	"nixops/internal/runner"
+	"nixops/internal/util"
 )
 
 // DeadPaths is the parsed result of `nix-store --gc --print-dead`.

@@ -46,14 +46,14 @@ If this repo has a `devenv.nix`, it is for local development only.
   equivalent here, say so and stop rather than working around it.
 <!-- agent-sandbox:end -->
 
-## Project: tnxstor
+## Project: nixops
 
-Build a Linux CLI/TUI application called **tnxstor** for safely managing and cleaning a local Nix store.
+Build a Linux CLI/TUI application called **nixops** for safely managing and cleaning a local Nix store.
 
 The compiled executable must be named:
 
 ```text
-tnxs
+nixops
 ```
 
 The primary target environment is:
@@ -73,7 +73,7 @@ The user specifically wants to manage Nix storage from Fedora/Bazzite where Nix,
 
 # 1. Core goals
 
-tnxstor should provide two interfaces:
+nixops should provide two interfaces:
 
 1. An interactive Bubble Tea TUI.
 2. A conventional CLI with flags/subcommands suitable for scripting.
@@ -128,14 +128,14 @@ Use a conventional Go project layout.
 Suggested structure:
 
 ```text
-tnxstor/
+nixops/
 ├── AGENTS.md
 ├── README.md
 ├── LICENSE
 ├── go.mod
 ├── go.sum
 ├── cmd/
-│   └── tnxs/
+│   └── nixops/
 │       └── main.go
 ├── internal/
 │   ├── cli/
@@ -169,7 +169,7 @@ Use interfaces around command execution so the code can be tested without modify
 
 # 4. Important safety principle
 
-tnxstor is a **cleanup tool**, therefore safety is more important than convenience.
+nixops is a **cleanup tool**, therefore safety is more important than convenience.
 
 Never manually delete files from:
 
@@ -193,7 +193,7 @@ nix-store --gc
 
 Do not attempt to reproduce Nix's garbage collector logic inside Go.
 
-tnxstor should orchestrate the official tools.
+nixops should orchestrate the official tools.
 
 ---
 
@@ -280,9 +280,9 @@ Support an age parameter.
 Examples:
 
 ```bash
-tnxs hm-expire --older-than 30d
-tnxs hm-expire --older-than 14d
-tnxs hm-expire --older-than 7d
+nixops hm-expire --older-than 30d
+nixops hm-expire --older-than 14d
+nixops hm-expire --older-than 7d
 ```
 
 Internally use the appropriate Home Manager generation expiration mechanism.
@@ -624,36 +624,36 @@ The first version should preferably execute commands as the invoking user and le
 The binary is:
 
 ```text
-tnxs
+nixops
 ```
 
 Provide:
 
 ```bash
-tnxs --help
+nixops --help
 ```
 
 Suggested interface:
 
 ```text
-tnxs
-tnxs tui
+nixops
+nixops tui
 
-tnxs status
+nixops status
 
-tnxs devenv-gc
+nixops devenv-gc
 
-tnxs hm-generations
-tnxs hm-expire --older-than 30d
+nixops hm-generations
+nixops hm-expire --older-than 30d
 
-tnxs dead
-tnxs roots
-tnxs live
+nixops dead
+nixops roots
+nixops live
 
-tnxs gc
-tnxs gc-old
+nixops gc
+nixops gc-old
 
-tnxs optimise
+nixops optimise
 ```
 
 Global options:
@@ -677,11 +677,11 @@ Potential global flags should be available consistently.
 Examples:
 
 ```bash
-tnxs gc --dry-run
-tnxs devenv-gc --dry-run
-tnxs hm-expire --older-than 30d --dry-run
-tnxs gc-old --dry-run
-tnxs optimise --dry-run
+nixops gc --dry-run
+nixops devenv-gc --dry-run
+nixops hm-expire --older-than 30d --dry-run
+nixops gc-old --dry-run
+nixops optimise --dry-run
 ```
 
 Dry-run must show exactly what would be executed.
@@ -754,7 +754,7 @@ For example, do not report a predicted number of freed bytes unless explicitly c
 Running:
 
 ```bash
-tnxs
+nixops
 ```
 
 with no arguments should launch the interactive TUI.
@@ -762,7 +762,7 @@ with no arguments should launch the interactive TUI.
 Alternatively:
 
 ```bash
-tnxs tui
+nixops tui
 ```
 
 should launch it explicitly.
@@ -773,7 +773,7 @@ Suggested main screen:
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ tnxstor                                      Nix Store        │
+│ nixops                                      Nix Store        │
 ├──────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Nix Store                                                   │
@@ -926,7 +926,7 @@ However, dry-run should preferably be a higher-level application concern so that
 For example:
 
 ```bash
-tnxs hm-expire --older-than 30d --dry-run
+nixops hm-expire --older-than 30d --dry-run
 ```
 
 may legitimately execute:
@@ -1029,7 +1029,7 @@ Detect whether stdout is a TTY.
 If stdin/stdout are not interactive:
 
 ```bash
-tnxs gc
+nixops gc
 ```
 
 should behave as a normal CLI command.
@@ -1039,7 +1039,7 @@ It must not launch Bubble Tea.
 The explicit:
 
 ```bash
-tnxs tui
+nixops tui
 ```
 
 may fail with a helpful error when no interactive terminal exists.
@@ -1112,7 +1112,7 @@ because these commands provide the precise low-level operations needed.
 
 # 29. Do not treat NixOS specially
 
-tnxstor is not a NixOS management tool.
+nixops is not a NixOS management tool.
 
 Do not add:
 
@@ -1160,7 +1160,7 @@ Cache measurements until the user explicitly refreshes.
 The status screen should ideally show:
 
 ```text
-tnxstor
+nixops
 
 Nix
 ────────────────────────────────────
@@ -1273,7 +1273,7 @@ Do not automatically perform aggressive GC unless explicitly selected.
 For:
 
 ```bash
-tnxs clean --dry-run
+nixops clean --dry-run
 ```
 
 display something similar to:
@@ -1310,7 +1310,7 @@ Do not claim an exact amount of space will be freed unless it can be safely dete
 Provide:
 
 ```bash
-tnxs clean
+nixops clean
 ```
 
 Options:
@@ -1329,15 +1329,15 @@ Options:
 Examples:
 
 ```bash
-tnxs clean --dry-run
+nixops clean --dry-run
 
-tnxs clean --yes
+nixops clean --yes
 
-tnxs clean --hm-older-than 14d --yes
+nixops clean --hm-older-than 14d --yes
 
-tnxs clean --devenv --gc --yes
+nixops clean --devenv --gc --yes
 
-tnxs clean --home-manager --gc --optimise --yes
+nixops clean --home-manager --gc --optimise --yes
 ```
 
 Default:
@@ -1357,7 +1357,7 @@ Do not include aggressive GC by default.
 Provide optional verbose logging:
 
 ```bash
-tnxs --verbose gc
+nixops --verbose gc
 ```
 
 Use structured internal logging rather than scattering `fmt.Println` throughout the code.
@@ -1389,7 +1389,7 @@ Optional configuration can later be added.
 Potential future location:
 
 ```text
-~/.config/tnxstor/config.toml
+~/.config/nixops/config.toml
 ```
 
 Do not implement configuration merely for the sake of having it.
@@ -1459,15 +1459,15 @@ The application should normally run as the regular user.
 
 # 41. CLI help
 
-`tnxs --help` should be excellent.
+`nixops --help` should be excellent.
 
 Example conceptual output:
 
 ```text
-tnxs — Nix store maintenance for standalone Nix systems
+nixops — Nix store maintenance for standalone Nix systems
 
 Usage:
-  tnxs <command> [options]
+  nixops <command> [options]
 
 Commands:
   tui             Launch interactive interface
@@ -1498,7 +1498,7 @@ Global options:
 
 Create a README explaining:
 
-- what tnxstor is
+- what nixops is
 - why it exists
 - supported environments
 - installation
@@ -1516,7 +1516,7 @@ Create a README explaining:
 Explicitly state that:
 
 ```text
-tnxstor does not delete files directly from /nix/store.
+nixops does not delete files directly from /nix/store.
 It delegates store lifecycle management to Nix.
 ```
 
@@ -1527,13 +1527,13 @@ It delegates store lifecycle management to Nix.
 The main build should produce:
 
 ```text
-tnxs
+nixops
 ```
 
 For example:
 
 ```bash
-go build -o tnxs ./cmd/tnxs
+go build -o nixops ./cmd/nixops
 ```
 
 Also provide:
@@ -1585,7 +1585,7 @@ zsh
 This is particularly useful for:
 
 ```text
-tnxs clean --hm-older-than ...
+nixops clean --hm-older-than ...
 ```
 
 Do not make shell completion a blocker for the initial implementation.
@@ -1657,85 +1657,85 @@ Polish README, CLI help, error messages and packaging.
 The project is complete when all of the following work:
 
 ```bash
-tnxs
+nixops
 ```
 
 launches the TUI.
 
 ```bash
-tnxs status
+nixops status
 ```
 
 shows useful system information.
 
 ```bash
-tnxs dead
+nixops dead
 ```
 
 shows what Nix considers dead.
 
 ```bash
-tnxs roots
+nixops roots
 ```
 
 shows GC roots.
 
 ```bash
-tnxs live
+nixops live
 ```
 
 shows live paths.
 
 ```bash
-tnxs gc --dry-run
+nixops gc --dry-run
 ```
 
 does not modify anything.
 
 ```bash
-tnxs gc
+nixops gc
 ```
 
 performs normal Nix GC.
 
 ```bash
-tnxs gc-old --dry-run
+nixops gc-old --dry-run
 ```
 
 clearly explains that old generations would be removed.
 
 ```bash
-tnxs devenv-gc
+nixops devenv-gc
 ```
 
 runs devenv GC.
 
 ```bash
-tnxs hm-generations
+nixops hm-generations
 ```
 
 shows Home Manager generations.
 
 ```bash
-tnxs hm-expire --older-than 30d --dry-run
+nixops hm-expire --older-than 30d --dry-run
 ```
 
 shows which generations would be expired without deleting them.
 
 ```bash
-tnxs optimise --dry-run
+nixops optimise --dry-run
 ```
 
 shows the optimisation command without running it.
 
 ```bash
-tnxs clean --dry-run
+nixops clean --dry-run
 ```
 
 shows a complete cleanup plan.
 
 ```bash
-tnxs clean --yes
+nixops clean --yes
 ```
 
 performs the configured safe cleanup without interactive confirmation.
@@ -1748,7 +1748,7 @@ No test may accidentally modify the developer's real Nix store.
 
 # 48. Design philosophy
 
-tnxstor should feel like a **native terminal utility**, not a GUI forced into a terminal.
+nixops should feel like a **native terminal utility**, not a GUI forced into a terminal.
 
 Priorities:
 
