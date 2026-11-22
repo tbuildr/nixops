@@ -193,14 +193,14 @@ func TestSelectMultipleWithoutSelector(t *testing.T) {
 
 func TestDefaultProjectsDirOverrideAndHomeExpansion(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("TNXS_PROJECTS_DIR", dir)
+	t.Setenv("NIXOPS_PROJECTS_DIR", dir)
 	if got := DefaultProjectsDir(); got != dir {
 		t.Errorf("got %q, want %q", got, dir)
 	}
 
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	t.Setenv("TNXS_PROJECTS_DIR", "~/code")
+	t.Setenv("NIXOPS_PROJECTS_DIR", "~/code")
 	if got, want := DefaultProjectsDir(), filepath.Join(home, "code"); got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
@@ -209,7 +209,7 @@ func TestDefaultProjectsDirOverrideAndHomeExpansion(t *testing.T) {
 func TestDefaultProjectsDirFallsBackToExistingSpelling(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	t.Setenv("TNXS_PROJECTS_DIR", "")
+	t.Setenv("NIXOPS_PROJECTS_DIR", "")
 	lower := filepath.Join(home, "projects")
 	if err := os.MkdirAll(lower, 0o755); err != nil {
 		t.Fatal(err)

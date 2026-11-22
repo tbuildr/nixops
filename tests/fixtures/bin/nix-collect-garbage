@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Fake nix-collect-garbage for tnxstor integration tests.
-if [ -n "$TNXS_TEST_LOG" ]; then echo "nix-collect-garbage $*" >> "$TNXS_TEST_LOG"; fi
+# Fake nix-collect-garbage for nixops integration tests.
+if [ -n "$NIXOPS_TEST_LOG" ]; then echo "nix-collect-garbage $*" >> "$NIXOPS_TEST_LOG"; fi
 case "$1" in
   -d)
     echo "removing old generations from /nix/var/nix/profiles..."

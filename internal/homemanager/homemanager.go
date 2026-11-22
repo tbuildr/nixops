@@ -1,5 +1,5 @@
 // Package homemanager manages Home Manager generations via the official
-// `home-manager` CLI. tnxstor never deletes generations itself.
+// `home-manager` CLI. nixops never deletes generations itself.
 package homemanager
 
 import (
@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"tnxstor/internal/runner"
-	"tnxstor/internal/util"
+	"nixops/internal/runner"
+	"nixops/internal/util"
 )
 
 // Generation is a single Home Manager generation.
@@ -153,7 +153,7 @@ func Expire(ctx context.Context, r runner.Runner, period string) (string, error)
 	return res.Stdout + res.Stderr, nil
 }
 
-// GNUDatePeriod converts a tnxstor period like "30d" into the GNU date
+// GNUDatePeriod converts a nixops period like "30d" into the GNU date
 // expression Home Manager expects: "-30 days".
 func GNUDatePeriod(p string) (string, error) {
 	days, err := util.ParseDays(p)

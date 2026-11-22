@@ -6,9 +6,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"tnxstor/internal/devenv"
-	"tnxstor/internal/operations"
-	"tnxstor/internal/runner"
+	"nixops/internal/devenv"
+	"nixops/internal/operations"
+	"nixops/internal/runner"
 )
 
 func TestExpandOutputNoInterleavedBlankLines(t *testing.T) {

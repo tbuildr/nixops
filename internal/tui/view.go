@@ -7,8 +7,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"tnxstor/internal/operations"
-	"tnxstor/internal/util"
+	"nixops/internal/operations"
+	"nixops/internal/util"
 )
 
 // clamp truncates s to n display columns with an ellipsis.
@@ -110,7 +110,7 @@ func (m model) contextLabel() string {
 }
 
 func (m model) viewHeader(width int) string {
-	title := styleBrand.Render("⚡ tnxstor") + " " + styleVersion.Render("v"+Version)
+	title := styleBrand.Render("⚡ nixops") + " " + styleVersion.Render("v"+Version)
 	context := styleDim.Render(m.contextLabel())
 	if m.dryRun {
 		context = styleDryRun.Render("[DRY RUN]") + " " + context
@@ -310,7 +310,7 @@ func (m model) viewDevenvEnvs(width int) string {
 	if len(m.devenvEnvs) == 0 {
 		b.WriteString(styleDim.Render("No devenv environments found.") + "\n\n")
 		b.WriteString(styleDim.Render("Add a project with devenv.nix or devenv.yaml under the root,") + "\n")
-		b.WriteString(styleDim.Render("set TNXS_PROJECTS_DIR, or run tnxs from inside a project.") + "\n")
+		b.WriteString(styleDim.Render("set NIXOPS_PROJECTS_DIR, or run nixops from inside a project.") + "\n")
 		return b.String()
 	}
 

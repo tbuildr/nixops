@@ -8,10 +8,10 @@ import (
 	"github.com/charmbracelet/harmonica"
 	"github.com/charmbracelet/lipgloss"
 
-	"tnxstor/internal/devenv"
-	"tnxstor/internal/operations"
-	"tnxstor/internal/runner"
-	"tnxstor/internal/tui/components"
+	"nixops/internal/devenv"
+	"nixops/internal/operations"
+	"nixops/internal/runner"
+	"nixops/internal/tui/components"
 )
 
 type screen int

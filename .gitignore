@@ -1,6 +1,6 @@
 # Build output
-/tnxs
-/tnxs-test
+/nixops
+/nixops-test
 *.test
 
 # Go

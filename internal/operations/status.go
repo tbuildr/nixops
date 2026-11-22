@@ -4,12 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"tnxstor/internal/homemanager"
-	"tnxstor/internal/nix"
-	"tnxstor/internal/system"
+	"nixops/internal/homemanager"
+	"nixops/internal/nix"
+	"nixops/internal/system"
 )
 
-// StatusInfo is the read-only overview behind `tnxs status` and the TUI
+// StatusInfo is the read-only overview behind `nixops status` and the TUI
 // status dashboard.
 type StatusInfo struct {
 	OS         system.Info

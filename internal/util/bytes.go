@@ -1,4 +1,4 @@
-// Package util provides small helpers shared across tnxstor.
+// Package util provides small helpers shared across nixops.
 package util
 
 import (

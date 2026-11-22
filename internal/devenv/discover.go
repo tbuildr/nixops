@@ -69,10 +69,10 @@ var skippedDirs = map[string]bool{
 }
 
 // DefaultProjectsDir returns the directory scanned for devenv projects:
-// $TNXS_PROJECTS_DIR when set, otherwise ~/Projects (falling back to
+// $NIXOPS_PROJECTS_DIR when set, otherwise ~/Projects (falling back to
 // ~/projects when only the lower-case spelling exists).
 func DefaultProjectsDir() string {
-	if v := strings.TrimSpace(os.Getenv("TNXS_PROJECTS_DIR")); v != "" {
+	if v := strings.TrimSpace(os.Getenv("NIXOPS_PROJECTS_DIR")); v != "" {
 		return expandHome(v)
 	}
 	home, err := os.UserHomeDir()
@@ -221,7 +221,7 @@ func Select(root, dir, name string) (Environment, error) {
 		matches := matchName(envs, name)
 		switch len(matches) {
 		case 0:
-			return Environment{}, fmt.Errorf("%w: %q (see `tnxs devenv-envs`)", ErrNoEnvironment, name)
+			return Environment{}, fmt.Errorf("%w: %q (see `nixops devenv-envs`)", ErrNoEnvironment, name)
 		case 1:
 			return matches[0], nil
 		default:
@@ -240,7 +240,7 @@ func Select(root, dir, name string) (Environment, error) {
 	}
 	envs, err := Discover(root, DefaultMaxDepth)
 	if err != nil {
-		return Environment{}, fmt.Errorf("%w: %v; use --dir or --env (see `tnxs devenv-envs`)", ErrNoEnvironment, err)
+		return Environment{}, fmt.Errorf("%w: %v; use --dir or --env (see `nixops devenv-envs`)", ErrNoEnvironment, err)
 	}
 	switch len(envs) {
 	case 0:
@@ -248,7 +248,7 @@ func Select(root, dir, name string) (Environment, error) {
 	case 1:
 		return envs[0], nil
 	default:
-		return Environment{}, fmt.Errorf("%w: multiple environments under %s; choose one with --env or --dir (see `tnxs devenv-envs`)",
+		return Environment{}, fmt.Errorf("%w: multiple environments under %s; choose one with --env or --dir (see `nixops devenv-envs`)",
 			ErrNoEnvironment, root)
 	}
 }

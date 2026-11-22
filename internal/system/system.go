@@ -1,4 +1,4 @@
-// Package system reports host and environment information. tnxstor is not a
+// Package system reports host and environment information. nixops is not a
 // NixOS tool; the host OS is displayed for informational purposes only.
 package system
 
@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"tnxstor/internal/runner"
+	"nixops/internal/runner"
 )
 
-// Info describes the host environment relevant to tnxstor.
+// Info describes the host environment relevant to nixops.
 type Info struct {
 	OSName   string // e.g. "Fedora Linux"
 	OSPretty string // e.g. "Fedora Linux 42 (Atomic)"

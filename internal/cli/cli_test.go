@@ -11,7 +11,7 @@ func TestUsageExitsZeroPath(t *testing.T) {
 	if code := Main([]string{"--help"}, s); code != ExitSuccess {
 		t.Fatalf("got %d want %d", code, ExitSuccess)
 	}
-	if !bytes.Contains(out.Bytes(), []byte("tnxs — Nix store maintenance")) {
+	if !bytes.Contains(out.Bytes(), []byte("nixops — Nix store maintenance")) {
 		t.Fatalf("usage text missing: %q", out.String())
 	}
 }

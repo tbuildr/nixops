@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Fake home-manager for tnxstor integration tests.
-if [ -n "$TNXS_TEST_LOG" ]; then echo "home-manager $*" >> "$TNXS_TEST_LOG"; fi
+# Fake home-manager for nixops integration tests.
+if [ -n "$NIXOPS_TEST_LOG" ]; then echo "home-manager $*" >> "$NIXOPS_TEST_LOG"; fi
 case "$1" in
   generations)
     cat <<'EOF'

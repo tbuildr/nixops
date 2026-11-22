@@ -1,4 +1,4 @@
-// Package tests contains integration tests that run the compiled tnxs
+// Package tests contains integration tests that run the compiled nixops
 // binary against fake executables. These tests never touch a real Nix store.
 package tests
 
@@ -24,23 +24,23 @@ var fixturesBin = func() string {
 
 func buildBinary(t *testing.T) string {
 	t.Helper()
-	bin := filepath.Join(t.TempDir(), "tnxs")
-	cmd := exec.Command("go", "build", "-o", bin, "tnxstor/cmd/tnxs")
+	bin := filepath.Join(t.TempDir(), "nixops")
+	cmd := exec.Command("go", "build", "-o", bin, "nixops/cmd/nixops")
 	cmd.Dir = ".."
 	var out bytes.Buffer
 	cmd.Stderr = &out
 	if err := cmd.Run(); err != nil {
-		t.Fatalf("build tnxs: %v\n%s", err, out.String())
+		t.Fatalf("build nixops: %v\n%s", err, out.String())
 	}
 	return bin
 }
 
-func runTNXS(t *testing.T, bin string, args ...string) (string, string, int) {
+func runNIXOPS(t *testing.T, bin string, args ...string) (string, string, int) {
 	t.Helper()
 	log := filepath.Join(t.TempDir(), "calls.log")
 	var stdout, stderr bytes.Buffer
 	cmd := exec.Command(bin, args...)
-	cmd.Env = append(os.Environ(), "PATH="+fixturesBin+":"+os.Getenv("PATH"), "TNXS_TEST_LOG="+log, "HOME=/home/tester")
+	cmd.Env = append(os.Environ(), "PATH="+fixturesBin+":"+os.Getenv("PATH"), "NIXOPS_TEST_LOG="+log, "HOME=/home/tester")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	code := 0
@@ -48,7 +48,7 @@ func runTNXS(t *testing.T, bin string, args ...string) (string, string, int) {
 		if ee, ok := err.(*exec.ExitError); ok {
 			code = ee.ExitCode()
 		} else {
-			t.Fatalf("run tnxs: %v", err)
+			t.Fatalf("run nixops: %v", err)
 		}
 	}
 	calls := ""
@@ -60,7 +60,7 @@ func runTNXS(t *testing.T, bin string, args ...string) (string, string, int) {
 
 func TestStatus(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "status")
+	stdout, _, code := runNIXOPS(t, bin, "status")
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stdout)
 	}
@@ -73,7 +73,7 @@ func TestStatus(t *testing.T) {
 
 func TestDeadCommand(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "dead")
+	stdout, _, code := runNIXOPS(t, bin, "dead")
 	if code != 0 {
 		t.Fatalf("exit = %d", code)
 	}
@@ -84,7 +84,7 @@ func TestDeadCommand(t *testing.T) {
 
 func TestGCDryRunDoesNotExecute(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, stderr, code := runTNXS(t, bin, "gc", "--dry-run")
+	stdout, stderr, code := runNIXOPS(t, bin, "gc", "--dry-run")
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -98,7 +98,7 @@ func TestGCDryRunDoesNotExecute(t *testing.T) {
 
 func TestOptimiseDryRun(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "optimise", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "optimise", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -109,7 +109,7 @@ func TestOptimiseDryRun(t *testing.T) {
 
 func TestHMExpireDryRunListsEligible(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "hm-expire", "--older-than", "30d", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "hm-expire", "--older-than", "30d", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -120,7 +120,7 @@ func TestHMExpireDryRunListsEligible(t *testing.T) {
 
 func TestHMDryRunDoesNotExpire(t *testing.T) {
 	bin := buildBinary(t)
-	_, stderr, _ := runTNXS(t, bin, "hm-expire", "--older-than", "30d", "--dry-run")
+	_, stderr, _ := runNIXOPS(t, bin, "hm-expire", "--older-than", "30d", "--dry-run")
 	if strings.Contains(stderr, "expire-generations") {
 		t.Error("expire-generations must not be called during dry-run")
 	}
@@ -128,7 +128,7 @@ func TestHMDryRunDoesNotExpire(t *testing.T) {
 
 func TestGCOldDryRunExplainsRollback(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "gc-old", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "gc-old", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -139,7 +139,7 @@ func TestGCOldDryRunExplainsRollback(t *testing.T) {
 
 func TestDevenvGCDryRun(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "devenv-gc", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "devenv-gc", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -150,7 +150,7 @@ func TestDevenvGCDryRun(t *testing.T) {
 
 func TestDevenvUpdateDryRun(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "devenv-update", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "devenv-update", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -161,7 +161,7 @@ func TestDevenvUpdateDryRun(t *testing.T) {
 
 func TestDevenvInfo(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "devenv-info")
+	stdout, _, code := runNIXOPS(t, bin, "devenv-info")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -172,7 +172,7 @@ func TestDevenvInfo(t *testing.T) {
 
 func TestCleanDryRunShowsPlan(t *testing.T) {
 	bin := buildBinary(t)
-	stdout, _, code := runTNXS(t, bin, "clean", "--dry-run")
+	stdout, _, code := runNIXOPS(t, bin, "clean", "--dry-run")
 	if code != 0 {
 		t.Fatal(code)
 	}
@@ -185,7 +185,7 @@ func TestCleanDryRunShowsPlan(t *testing.T) {
 
 func TestCleanYesExecutesInOrder(t *testing.T) {
 	bin := buildBinary(t)
-	_, stderr, code := runTNXS(t, bin, "clean", "--yes")
+	_, stderr, code := runNIXOPS(t, bin, "clean", "--yes")
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -221,7 +221,7 @@ func extractCalls(stderr string) []string {
 
 func TestGCOldNonInteractiveRequiresYes(t *testing.T) {
 	bin := buildBinary(t)
-	_, _, code := runTNXS(t, bin, "gc-old")
+	_, _, code := runNIXOPS(t, bin, "gc-old")
 	if code != 4 {
 		t.Errorf("gc-old without --yes non-interactively should exit 4 (cancelled), got %d", code)
 	}
@@ -244,9 +244,9 @@ func TestDevenvEnvsListsProjects(t *testing.T) {
 	beta := filepath.Join(root, "team", "beta")
 	writeDevenvProject(t, alpha)
 	writeDevenvProject(t, beta)
-	t.Setenv("TNXS_PROJECTS_DIR", root)
+	t.Setenv("NIXOPS_PROJECTS_DIR", root)
 
-	stdout, stderr, code := runTNXS(t, bin, "devenv-envs")
+	stdout, stderr, code := runNIXOPS(t, bin, "devenv-envs")
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -256,7 +256,7 @@ func TestDevenvEnvsListsProjects(t *testing.T) {
 		}
 	}
 
-	stdout, stderr, code = runTNXS(t, bin, "devenv-envs", "--json")
+	stdout, stderr, code = runNIXOPS(t, bin, "devenv-envs", "--json")
 	if code != 0 {
 		t.Fatalf("json exit = %d, stderr: %s", code, stderr)
 	}
@@ -272,9 +272,9 @@ func TestDevenvInfoSelectsExplicitDir(t *testing.T) {
 	proj := filepath.Join(t.TempDir(), "chosen")
 	writeDevenvProject(t, proj)
 	cwdLog := filepath.Join(t.TempDir(), "cwd.log")
-	t.Setenv("TNXS_TEST_CWD_LOG", cwdLog)
+	t.Setenv("NIXOPS_TEST_CWD_LOG", cwdLog)
 
-	stdout, stderr, code := runTNXS(t, bin, "devenv-info", "--dir", proj)
+	stdout, stderr, code := runNIXOPS(t, bin, "devenv-info", "--dir", proj)
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -298,9 +298,9 @@ func TestDevenvInfoSelectsEnvironmentByName(t *testing.T) {
 	root := t.TempDir()
 	proj := filepath.Join(root, "named")
 	writeDevenvProject(t, proj)
-	t.Setenv("TNXS_PROJECTS_DIR", root)
+	t.Setenv("NIXOPS_PROJECTS_DIR", root)
 
-	stdout, stderr, code := runTNXS(t, bin, "devenv-info", "--env", "named")
+	stdout, stderr, code := runNIXOPS(t, bin, "devenv-info", "--env", "named")
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -314,9 +314,9 @@ func TestDevenvGCUsesSelectedDir(t *testing.T) {
 	proj := filepath.Join(t.TempDir(), "gc-target")
 	writeDevenvProject(t, proj)
 	cwdLog := filepath.Join(t.TempDir(), "cwd.log")
-	t.Setenv("TNXS_TEST_CWD_LOG", cwdLog)
+	t.Setenv("NIXOPS_TEST_CWD_LOG", cwdLog)
 
-	_, stderr, code := runTNXS(t, bin, "devenv-gc", "--dir", proj)
+	_, stderr, code := runNIXOPS(t, bin, "devenv-gc", "--dir", proj)
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -332,7 +332,7 @@ func TestDevenvGCUsesSelectedDir(t *testing.T) {
 func TestDevenvInvalidTargetIsUsageError(t *testing.T) {
 	bin := buildBinary(t)
 	notProject := t.TempDir()
-	_, stderr, code := runTNXS(t, bin, "devenv-info", "--dir", notProject)
+	_, stderr, code := runNIXOPS(t, bin, "devenv-info", "--dir", notProject)
 	if code != 2 {
 		t.Fatalf("exit = %d, want 2; stderr: %s", code, stderr)
 	}
@@ -345,7 +345,7 @@ func TestCleanDryRunNamesDevenvDir(t *testing.T) {
 	bin := buildBinary(t)
 	proj := filepath.Join(t.TempDir(), "clean-target")
 	writeDevenvProject(t, proj)
-	stdout, stderr, code := runTNXS(t, bin, "clean", "--dry-run", "--devenv-dir", proj)
+	stdout, stderr, code := runNIXOPS(t, bin, "clean", "--dry-run", "--devenv-dir", proj)
 	if code != 0 {
 		t.Fatalf("exit = %d, stderr: %s", code, stderr)
 	}
@@ -358,7 +358,7 @@ func TestCleanDryRunNamesDevenvDir(t *testing.T) {
 
 func TestUnknownCommandExitCode(t *testing.T) {
 	bin := buildBinary(t)
-	_, _, code := runTNXS(t, bin, "nonsense")
+	_, _, code := runNIXOPS(t, bin, "nonsense")
 	if code != 2 {
 		t.Errorf("unknown command should exit 2, got %d", code)
 	}

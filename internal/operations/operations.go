@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"tnxstor/internal/devenv"
-	"tnxstor/internal/homemanager"
-	"tnxstor/internal/nix"
-	"tnxstor/internal/runner"
-	"tnxstor/internal/util"
+	"nixops/internal/devenv"
+	"nixops/internal/homemanager"
+	"nixops/internal/nix"
+	"nixops/internal/runner"
+	"nixops/internal/util"
 )
 
 // Sentinel errors mapped to documented exit codes by the CLI.

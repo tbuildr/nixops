@@ -1,14 +1,14 @@
 // Package devenv wraps the official `devenv gc`, `devenv update` and
 // `devenv info` commands and discovers devenv projects on disk. devenv
 // maintains timestamped GC roots itself; `devenv gc` cleans obsolete roots
-// and then performs Nix garbage collection. tnxstor never touches devenv's
+// and then performs Nix garbage collection. nixops never touches devenv's
 // GC directory directly.
 package devenv
 
 import (
 	"context"
 
-	"tnxstor/internal/runner"
+	"nixops/internal/runner"
 )
 
 // Available reports whether devenv is installed.
